@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
+import Book from './Book'
+import { shelfTitles } from './Shelf'
 
 export default class BookList extends Component {
-  shelfTitles = () => ({
-    wantToRead: 'Want To Read',
-    currentlyReading: 'Currently Reading',
-    read: 'Read'
-  });
-
   shelfBooks = (books) => ({
       wantToRead: this.filterByShelf(books, 'wantToRead'),
       currentlyReading: this.filterByShelf(books, 'currentlyReading'),
@@ -25,33 +21,16 @@ export default class BookList extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                {Object.keys(this.shelfTitles()).map((shelf) => (
+                {Object.keys(shelfTitles()).map((shelf) => (
                   <div className="bookshelf" key={shelf}>
                     <h2 className="bookshelf-title">
-                      {this.shelfTitles()[shelf]}
+                      {shelfTitles()[shelf]}
                     </h2>
                     <div className="bookshelf-books">
                       <ol className="books-grid">
                         {shelfedBooks[shelf].map((book) => (
-                          <li key={book.id}>
-                            <div className="book">
-                              <div className="book-top">
-                                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                                <div className="book-shelf-changer">
-                                  <select defaultValue={shelf}>
-                                    <option value="none" disabled>Move to...</option>
-                                    <option value="currentlyReading">Currently Reading</option>
-                                    <option value="wantToRead">Want to Read</option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div className="book-title">{book.title}</div>
-                              <div className="book-authors">{book.authors.join(', ')}</div>
-                            </div>
-                          </li>
-                          ))}
+                          <Book book={book} key={book.id} />
+                        ))}
                       </ol>
                     </div>
                   </div>)
