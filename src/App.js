@@ -1,18 +1,14 @@
 import React from 'react'
-import * as BooksAPI from './BooksAPI'
 import './App.css'
 import BookList from './BookList'
 
 class BooksApp extends React.Component {
-  componentDidMount() {
-    BooksAPI
-      .getAll()
-      .then((books) => this.setState({books}))
+  state = {
+    showSearchPage: false,
   }
 
-  state = {
-    books: [],
-    showSearchPage: false,
+  toggleSearchPage = (searchPageFlag) => {
+    this.setState({ showSearchPage: searchPageFlag });
   }
 
   render() {
@@ -32,14 +28,13 @@ class BooksApp extends React.Component {
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
                 <input type="text" placeholder="Search by title or author"/>
-
               </div>
             </div>
             <div className="search-books-results">
               <ol className="books-grid"></ol>
             </div>
           </div>
-        ) : <BookList books={this.state.books} />}
+        ) : <BookList onSearchPage={this.toggleSearchPage} />}
       </div>
     )
   }

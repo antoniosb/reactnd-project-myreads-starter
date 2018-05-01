@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
 import Book from './Book'
 import { shelfTitles } from './Shelf'
+import * as BooksAPI from './BooksAPI'
 
 export default class BookList extends Component {
+  componentDidMount() {
+    BooksAPI
+      .getAll()
+      .then((books) => this.setState({books}))
+  }
+
+  state = {
+    books: [],
+  }
+
   shelfBooks = (books) => ({
       wantToRead: this.filterByShelf(books, 'wantToRead'),
       currentlyReading: this.filterByShelf(books, 'currentlyReading'),
@@ -12,8 +23,9 @@ export default class BookList extends Component {
   filterByShelf = (books, shelfName) => (books.filter((book) => book.shelf === shelfName));
 
   render() {
-    const { books } = this.props
+    const { books } = this.state
     const shelfedBooks = this.shelfBooks(books)
+    const { onSearchPage } = this.props
     return (
           <div className="list-books">
             <div className="list-books-title">
@@ -36,6 +48,9 @@ export default class BookList extends Component {
                   </div>)
                 )}
               </div>
+            </div>
+            <div className="open-search">
+              <a onClick={() => onSearchPage(true)}>Add a book</a>
             </div>
           </div>
     );
