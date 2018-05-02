@@ -14,17 +14,28 @@ export default class BookList extends Component {
     books: [],
   }
 
-  shelfBooks = (books) => ({
-      wantToRead: this.filterByShelf(books, 'wantToRead'),
-      currentlyReading: this.filterByShelf(books, 'currentlyReading'),
-      read: this.filterByShelf(books, 'read')
-  });
-
   filterByShelf = (books, shelfName) => (books.filter((book) => book.shelf === shelfName));
+
+  updateBookShelf = (book, shelf) => {
+    if (shelf !== 'none') {
+      BooksAPI.update(book, shelf).then((shelves) => {
+        let currentBooks = this.state.books
+        Object.keys(shelfTitles()).forEach(shelfTitle => {
+          shelves[shelfTitle].forEach(bookId => {
+            currentBooks.forEach(currentBook => {
+              if (currentBook.id === bookId) {
+                currentBook.shelf = shelfTitle
+              }
+            })
+          })
+        })
+        this.setState({ books: currentBooks });
+      })
+    }
+  };
 
   render() {
     const { books } = this.state
-    const shelfedBooks = this.shelfBooks(books)
     const { onSearchPage } = this.props
     return (
           <div className="list-books">
@@ -40,8 +51,8 @@ export default class BookList extends Component {
                     </h2>
                     <div className="bookshelf-books">
                       <ol className="books-grid">
-                        {shelfedBooks[shelf].map((book) => (
-                          <Book book={book} key={book.id} />
+                        {this.filterByShelf(books, shelf).map((book) => (
+                          <Book book={book} key={book.id} onUpdateShelf={this.updateBookShelf} />
                         ))}
                       </ol>
                     </div>
