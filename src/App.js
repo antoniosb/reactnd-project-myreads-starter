@@ -4,6 +4,7 @@ import BookList from './BookList'
 import BookSearch from './BookSearch'
 import { shelfTitlesKeys } from './Shelf'
 import * as BooksAPI from './BooksAPI'
+import { Route } from 'react-router-dom';
 
 class BooksApp extends React.Component {
   componentDidMount() {
@@ -13,12 +14,7 @@ class BooksApp extends React.Component {
   }
 
   state = {
-    showSearchPage: false,
     books: [],
-  }
-
-  toggleSearchPage = (searchPageFlag) => {
-    this.setState({ showSearchPage: searchPageFlag });
   }
 
   updateBookShelf = (book, shelf) => {
@@ -57,15 +53,16 @@ class BooksApp extends React.Component {
     const { books } = this.state
     return (
       <div className="app">
-        {this.state.showSearchPage ?
+        <Route exact path="/" render={() => (
+          <BookList
+            onUpdateShelf={this.updateBookShelf}
+            books={books} />
+        )}/>
+        <Route path="/search" render={() => (
           <BookSearch
             currentBookShelves={this.currentBookShelves}
-            onUpdateShelf={this.updateBookShelf}
-            onSearchPage={this.toggleSearchPage} /> :
-          <BookList
-            onSearchPage={this.toggleSearchPage}
-            onUpdateShelf={this.updateBookShelf}
-            books={books} />}
+            onUpdateShelf={this.updateBookShelf} />
+        )}/>
       </div>
     )
   }
