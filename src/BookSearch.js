@@ -10,10 +10,14 @@ export default class BookSearch extends Component {
 
   bookSearch = (term) => {
     const currentTerm = this.state.term
+    const currentBookShelves = this.props.currentBookShelves()
     this.setState({ term });
     if (term !== '' && term !== currentTerm) {
       BooksAPI.search(this.state.term).then((searchResult) => {
         if (searchResult !== undefined && !searchResult.hasOwnProperty('error')) {
+          searchResult.forEach(book => {
+            book.shelf = currentBookShelves[book.id]
+          })
           this.setState({ searchResult })
         } else {
           this.setState({ searchResult: [] })

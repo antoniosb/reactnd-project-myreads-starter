@@ -25,6 +25,10 @@ class BooksApp extends React.Component {
     if (shelf !== 'none') {
       BooksAPI.update(book, shelf).then((shelves) => {
         let currentBooks = this.state.books
+        const currentBookIds = currentBooks.map(book => book.id)
+        if(!currentBookIds.includes(book.id)) {
+          currentBooks.push(book)
+        }
         shelfTitlesKeys().forEach(shelfTitle => {
           shelves[shelfTitle].forEach(bookId => {
             currentBooks.forEach(currentBook => {
@@ -39,6 +43,15 @@ class BooksApp extends React.Component {
     }
   };
 
+  currentBookShelves = () => {
+    const currentBooks = this.state.books
+    let bookShelves = {}
+    currentBooks.forEach(book => {
+      bookShelves[book.id] = book.shelf
+    })
+    return bookShelves
+  };
+
 
   render() {
     const { books } = this.state
@@ -46,6 +59,7 @@ class BooksApp extends React.Component {
       <div className="app">
         {this.state.showSearchPage ?
           <BookSearch
+            currentBookShelves={this.currentBookShelves}
             onUpdateShelf={this.updateBookShelf}
             onSearchPage={this.toggleSearchPage} /> :
           <BookList
