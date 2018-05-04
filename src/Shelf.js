@@ -6,6 +6,8 @@ export const shelfTitles = () => ({
   read: 'Read',
 });
 
+export const shelfTitlesKeys = () => (Object.keys(shelfTitles()));
+
 export class Shelf extends Component {
 
   updateShelf = (book, newShelf) => {

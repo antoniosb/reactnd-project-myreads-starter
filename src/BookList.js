@@ -1,42 +1,12 @@
 import React, { Component } from 'react';
 import Book from './Book'
-import { shelfTitles } from './Shelf'
-import * as BooksAPI from './BooksAPI'
+import { shelfTitles, shelfTitlesKeys } from './Shelf'
 
 export default class BookList extends Component {
-  componentDidMount() {
-    BooksAPI
-      .getAll()
-      .then((books) => this.setState({books}))
-  }
-
-  state = {
-    books: [],
-  }
-
   filterByShelf = (books, shelfName) => (books.filter((book) => book.shelf === shelfName));
 
-  updateBookShelf = (book, shelf) => {
-    if (shelf !== 'none') {
-      BooksAPI.update(book, shelf).then((shelves) => {
-        let currentBooks = this.state.books
-        Object.keys(shelfTitles()).forEach(shelfTitle => {
-          shelves[shelfTitle].forEach(bookId => {
-            currentBooks.forEach(currentBook => {
-              if (currentBook.id === bookId) {
-                currentBook.shelf = shelfTitle
-              }
-            })
-          })
-        })
-        this.setState({ books: currentBooks });
-      })
-    }
-  };
-
   render() {
-    const { books } = this.state
-    const { onSearchPage } = this.props
+    const { onSearchPage, onUpdateShelf, books } = this.props
     return (
           <div className="list-books">
             <div className="list-books-title">
@@ -44,7 +14,7 @@ export default class BookList extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                {Object.keys(shelfTitles()).map((shelf) => (
+                {shelfTitlesKeys().map((shelf) => (
                   <div className="bookshelf" key={shelf}>
                     <h2 className="bookshelf-title">
                       {shelfTitles()[shelf]}
@@ -52,7 +22,7 @@ export default class BookList extends Component {
                     <div className="bookshelf-books">
                       <ol className="books-grid">
                         {this.filterByShelf(books, shelf).map((book) => (
-                          <Book book={book} key={book.id} onUpdateShelf={this.updateBookShelf} />
+                          <Book book={book} key={book.id} onUpdateShelf={onUpdateShelf} />
                         ))}
                       </ol>
                     </div>
