@@ -3,7 +3,7 @@ import { Shelf } from './Shelf';
 
 export default class Book extends Component {
   render() {
-    const { book, onUpdateShelf } = this.props
+    const { book, updateShelf } = this.props
 
     return (
       <li key={book.id}>
@@ -13,7 +13,7 @@ export default class Book extends Component {
               <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div> :
               <div className="book-cover" style={{ width: 128, height: 193 }}>image not found</div>
             }
-            <Shelf book={book} onUpdateShelf={onUpdateShelf} />
+            <Shelf book={book} updateShelf={updateShelf} />
           </div>
           <div className="book-title">{book.title}</div>
           {book.authors ?

@@ -18,25 +18,26 @@ class BooksApp extends React.Component {
   }
 
   updateBookShelf = (book, shelf) => {
-    if (shelf !== 'none') {
-      BooksAPI.update(book, shelf).then((shelves) => {
-        let currentBooks = this.state.books
-        const currentBookIds = currentBooks.map(book => book.id)
-        if(!currentBookIds.includes(book.id)) {
-          currentBooks.push(book)
-        }
-        shelfTitlesKeys().forEach(shelfTitle => {
-          shelves[shelfTitle].forEach(bookId => {
-            currentBooks.forEach(currentBook => {
-              if (currentBook.id === bookId) {
-                currentBook.shelf = shelfTitle
-              }
-            })
+    BooksAPI.update(book, shelf).then((shelves) => {
+      let currentBooks = this.state.books
+      const currentBookIds = currentBooks.map(book => book.id)
+      if(!currentBookIds.includes(book.id)) {
+        currentBooks.push(book)
+      }
+      if(shelf === 'none') {
+        currentBooks = currentBooks.filter(currentBook => book.id !== currentBook.id)
+      }
+      shelfTitlesKeys().forEach(shelfTitle => {
+        shelves[shelfTitle].forEach(bookId => {
+          currentBooks.forEach(currentBook => {
+            if (currentBook.id === bookId) {
+              currentBook.shelf = shelfTitle
+            }
           })
         })
-        this.setState({ books: currentBooks });
       })
-    }
+      this.setState({ books: currentBooks });
+    })
   };
 
   currentBookShelves = () => {
@@ -55,7 +56,7 @@ class BooksApp extends React.Component {
       <div className="app">
         <Route exact path="/" render={() => (
           <BookList
-            onUpdateShelf={this.updateBookShelf}
+            updateShelf={this.updateBookShelf}
             books={books} />
         )}/>
         <Route path="/search" render={() => (

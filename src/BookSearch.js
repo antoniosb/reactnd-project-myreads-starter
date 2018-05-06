@@ -46,7 +46,7 @@ export default class BookSearch extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {searchResult.map((book) => <Book book={book} key={book.id} onUpdateShelf={onUpdateShelf} />)}
+            {searchResult.map((book) => <Book book={book} key={book.id} updateShelf={onUpdateShelf} />)}
           </ol>
         </div>
       </div>
